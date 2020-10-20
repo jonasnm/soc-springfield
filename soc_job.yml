@@ -1,0 +1,25 @@
+kind: Job
+apiVersion: batch/v1
+metadata:
+  name: soc-walker-duffman
+spec:
+  template:
+    spec:
+      containers:
+      - name: soc
+        image: 'jonasnm/soc:latest'
+        workingDir: /storage/soft-option-critic-experiments
+        command: ["sh", "./soc_job.sh"]
+        volumeMounts:
+        - name: storage
+          mountPath: /storage
+        #resources:
+          #limits:
+            #cpu: 4
+      nodeName: duffman
+      volumes:
+      - name: storage
+        persistentVolumeClaim:
+          claimName: storage
+      restartPolicy: OnFailure
+  backoffLimit: 0
